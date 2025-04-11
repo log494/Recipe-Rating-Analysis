@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="{{ site.lang | default: 'en-US' }}">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="stylesheet"
+      href="{{ '/assets/css/style.css?v=' | append: site.github.build_revision | relative_url }}"
+    />
+    {% seo %} {% include head-custom.html %}
+  </head>
+
+  <body>
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+      <header class="inner">
+        {% if site.github.is_project_page %}
+        <a id="forkme_banner" href="{{ site.github.repository_url }}"
+          >View on GitHub</a
+        >
+        {% endif %}
+
+        <h1 id="project_title">
+          {{ site.title | default: site.github.repository_name }}
+        </h1>
+        <h2 id="project_tagline">
+          {{ site.description | default: site.github.project_tagline }}
+        </h2>
+      </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h2>Step 1: Introduction</h2>
+        <p>
+          Summarize your project goals, your research question, and why it's
+          interesting or important.
+        </p>
+
+        <h2>Step 2: Data Cleaning and Exploratory Data Analysis</h2>
+        <p>
+          Discuss how you prepared and explored your data. Include issues like
+          missingness, outliers, and distributions. Add key plots with
+          explanations.
+        </p>
+
+        <h2>Step 3: Framing a Prediction Problem</h2>
+        <p>
+          Define your prediction target and describe how you're framing the ML
+          task (classification, regression, etc.).
+        </p>
+
+        <h2>Step 4: Baseline Model</h2>
+        <p>
+          Describe the simplest model you tried and how it performed. Include
+          performance metrics like accuracy, precision, recall, etc.
+        </p>
+
+        <h2>Step 5: Final Model</h2>
+        <p>
+          Explain your final model and how it compares to your baseline. Justify
+          your modeling choices and highlight final evaluation results.
+        </p>
+
+        <p>For details and code, see the full analysis notebook on GitHub.</p>
+      </section>
+    </div>
+
+    <!-- FOOTER -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        {% if site.github.is_project_page %}
+        <p class="copyright">
+          {{ site.title | default: site.github.repository_name }} maintained by
+          <a href="{{ site.github.owner_url }}">{{ site.github.owner_name }}</a>
+        </p>
+        {% endif %}
+        <p>
+          Published with <a href="https://pages.github.com">GitHub Pages</a>
+        </p>
+      </footer>
+    </div>
+  </body>
+</html>
