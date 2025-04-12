@@ -41,7 +41,7 @@
         <h2>Introduction</h2>
         <p>
             Welcome to a report on the investigation into a dataset on Recipes and Ratings.
-            Using the data structure listed below, I set out to predict what types of recipes tend to have higher average ratings.
+            Using the data from food.com structured as listed below, I set out to predict what types of recipes tend to have higher average ratings using data visualization and regression topics... (expand).
           </p>
           
           <div style="display: flex; gap: 40px; flex-wrap: wrap;">
@@ -89,7 +89,32 @@
 
         <h2>Data Cleaning and Exploratory Data Analysis</h2>
         <p>
-        In order to explore the data how mention I first took several steps to clean and make teh data usable
+            To explore and prepare the dataset for analysis, I first performed several cleaning and transformation steps to ensure the data was usable and meaningful for evaluating recipe ratings.
+
+            Merging Datasets:
+            I began by merging the Recipes and Ratings datasets into a single DataFrame. Since each recipe can have multiple ratings, I performed a left merge using the id column from the Recipes table and the recipe_id column from the Ratings table.
+            
+            Average Rating:
+            Because each recipe has multiple user-submitted ratings, I calculated the average rating for each recipe using groupby on recipe_id and taking the mean of the rating values. I then mapped the resulting Series back to the full DataFrame using the id column. Before this, I replaced any rating values of 0 with NaN to avoid skewing the average.
+            
+            Review Count:
+            I was curious whether the number of reviews a recipe received correlated with its average rating. To explore this, I created a review_count column by using value_counts() on the recipe_id column and then mapping those counts back to the full dataset using the id column. I also filled any missing values with 0.
+            
+            Health Score:
+            To examine whether a recipe's healthiness impacted its rating, I created a health_score based on the nutritional data provided in the dataset. I extracted individual nutritional values into separate columns (e.g., sugar, protein, sodium), assumed each recipe serves four people, and adjusted the values accordingly.
+            
+            I then applied a weighting system to reflect the nutritional value of each component:
+            
+            Positive weight: Protein (+2)
+            
+            Negative weights: Sugar (-1.8), saturated fat (-1.5), total fat, carbs, calories (-1 each), and sodium (-0.5)
+            
+            The resulting health_score was negative for healthier recipes and positive for less healthy ones, so I flipped the sign so that higher scores indicate unhealthier recipes.
+            
+            Initially, some scores were unrealistically high (e.g., over 100,000), due to outliers such as a single recipe having a sugar PDV of 30,000. To address this, I clipped extreme health score values, keeping only recipes between the 1st and 98th percentile. This reduced the total number of recipes from about 23,000 to 22,000, the mean score from 62 to 49, and the standard deviation from 147 to 48. The maximum score also dropped dramatically from over 16,000 to 329, making the data much more interpretable.
+            
+            Recipe Duration (Minutes):
+            Finally, I addressed outliers in the minutes column, which included some recipes that supposedly took months to prepare. I clipped the top and bottom 1% of the minutes distribution to focus on recipes with more realistic preparation times.
         </p>
 
         <h2>Framing a Prediction Problem</h2>
