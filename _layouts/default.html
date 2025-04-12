@@ -23,10 +23,10 @@
         {% endif %}
 
         <h1 id="project_title">
-          What Makes A Five-Star Recipe Rating?
+          Recipe For a Five-Star Rating
         </h1>
         <h2 id="project_tagline">
-          Analysis on Reipe Data and its trends on Ratings
+          Analysis on Recipe Data and its trends on Ratings
         </h2>
       </header>
     </div>
@@ -40,9 +40,52 @@
       >
         <h2>Introduction</h2>
         <p>
-          Summarize your project goals, your research question, and why it's
-          interesting or important. TDOD
-        </p>
+            Welcome to a report on the investigation into a dataset on Recipes and Ratings.
+            Using the data structure listed below, I set out to predict what types of recipes tend to have higher average ratings.
+          </p>
+          
+          <div style="display: flex; gap: 40px; flex-wrap: wrap;">
+          
+            <!-- Recipes Table -->
+            <div style="flex: 1;">
+              <h3>Recipes</h3>
+              <table>
+                <thead>
+                  <tr><th>Column</th><th>Description</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>'name'</td><td>Recipe name</td></tr>
+                  <tr><td>'id'</td><td>Recipe ID</td></tr>
+                  <tr><td>'minutes'</td><td>Minutes to prepare recipe</td></tr>
+                  <tr><td>'contributor_id'</td><td>User ID who submitted this recipe</td></tr>
+                  <tr><td>'submitted'</td><td>Date recipe was submitted</td></tr>
+                  <tr><td>'tags'</td><td>Food.com tags for recipe</td></tr>
+                  <tr><td>'nutrition'</td><td>Nutrition info: [calories, total fat, sugar, sodium, protein, saturated fat, carbs]</td></tr>
+                  <tr><td>'n_steps'</td><td>Number of steps in recipe</td></tr>
+                  <tr><td>'steps'</td><td>Text for recipe steps, in order</td></tr>
+                  <tr><td>'description'</td><td>User-provided description</td></tr>
+                </tbody>
+              </table>
+            </div>
+          
+            <!-- Ratings Table -->
+            <div style="flex: 1;">
+              <h3>Ratings</h3>
+              <table>
+                <thead>
+                  <tr><th>Column</th><th>Description</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>'user_id'</td><td>User ID</td></tr>
+                  <tr><td>'recipe_id'</td><td>Recipe ID</td></tr>
+                  <tr><td>'date'</td><td>Date of interaction</td></tr>
+                  <tr><td>'rating'</td><td>Rating given</td></tr>
+                  <tr><td>'review'</td><td>Review text</td></tr>
+                </tbody>
+              </table>
+            </div>
+          
+          </div>
 
         <h2>Data Cleaning and Exploratory Data Analysis</h2>
         <p>
