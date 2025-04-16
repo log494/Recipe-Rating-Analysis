@@ -1,13 +1,15 @@
 <!DOCTYPE html>
-<html lang="en-US">
+<html lang="{{ site.lang | default: 'en-US' }}">
   <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link
       rel="stylesheet"
-      href="assets/css/style.css"
+      href="{{ '/assets/css/style.css?v=' | append: site.github.build_revision | relative_url }}"
     />
+    {% seo %}
+    {% include head-custom.html %}
     <title>Recipe For a Five-Star Rating</title>
   </head>
 
@@ -15,6 +17,12 @@
     <!-- HEADER -->
     <div id="header_wrap" class="outer">
       <header class="inner">
+        {% if site.github.is_project_page %}
+          <div class="github-banner">
+            <a id="forkme_banner" href="{{ site.github.repository_url }}">View on GitHub</a>
+          </div>
+        {% endif %}
+
         <h1 id="project_title">Recipe For a Five-Star Rating</h1>
         <h2 id="project_tagline">
           Analysis on Recipe Data and its Trends on Ratings
@@ -35,6 +43,7 @@
           Using data from food.com, I set out to predict what types of recipes tend to have higher average ratings using data visualization and regression techniques.
         </p>
 
+        <!-- Dataset Tables -->
         <div style="display: flex; gap: 40px; flex-wrap: wrap;">
           <div style="flex: 1;">
             <h3>Recipes</h3>
@@ -49,10 +58,10 @@
                 <tr><td>contributor_id</td><td>User ID who submitted this recipe</td></tr>
                 <tr><td>submitted</td><td>Date recipe was submitted</td></tr>
                 <tr><td>tags</td><td>Food.com tags for recipe</td></tr>
-                <tr><td>nutrition</td><td>Nutrition info: [calories, total fat, sugar, sodium, protein, saturated fat, carbs]</td></tr>
-                <tr><td>n_steps</td><td>Number of steps in recipe</td></tr>
-                <tr><td>steps</td><td>Text for recipe steps, in order</td></tr>
-                <tr><td>description</td><td>User-provided description</td></tr>
+                <tr><td>nutrition</td><td>Nutrition info: [calories, fat, sugar, sodium, protein, sat. fat, carbs]</td></tr>
+                <tr><td>n_steps</td><td>Number of steps</td></tr>
+                <tr><td>steps</td><td>Step-by-step instructions</td></tr>
+                <tr><td>description</td><td>User-provided recipe description</td></tr>
               </tbody>
             </table>
           </div>
@@ -66,26 +75,25 @@
               <tbody>
                 <tr><td>user_id</td><td>User ID</td></tr>
                 <tr><td>recipe_id</td><td>Recipe ID</td></tr>
-                <tr><td>date</td><td>Date of interaction</td></tr>
+                <tr><td>date</td><td>Date of rating</td></tr>
                 <tr><td>rating</td><td>Rating given</td></tr>
-                <tr><td>review</td><td>Review text</td></tr>
+                <tr><td>review</td><td>User review text</td></tr>
               </tbody>
             </table>
           </div>
         </div>
 
         <h2>Data Cleaning and Exploratory Data Analysis</h2>
-        <p>I merged the Recipes and Ratings datasets and performed a series of transformations to clean the data and extract meaningful features for modeling.</p>
+        <p>I merged the Recipes and Ratings datasets and performed data cleaning and feature engineering steps to prepare for modeling.</p>
 
-        <h3>Key Steps:</h3>
         <ul>
-          <li>Removed rating 0 entries and computed average rating per recipe.</li>
-          <li>Created a review count column using value_counts on recipe_id.</li>
-          <li>Engineered a <strong>health_score</strong> based on nutritional values using a weighted scoring system. Outliers were clipped to improve distribution.</li>
-          <li>Trimmed extreme prep time values by clipping top and bottom 1% in the <code>minutes</code> column.</li>
+          <li>Removed ratings of 0 and computed average rating per recipe.</li>
+          <li>Created a <code>review_count</code> feature using <code>value_counts</code>.</li>
+          <li>Engineered a <strong>health_score</strong> using weighted nutrition values and clipped extreme outliers.</li>
+          <li>Trimmed top and bottom 1% values from <code>minutes</code> to remove unrealistic durations.</li>
         </ul>
 
-        <h3>Interactive EDA Plot</h3>
+        <h3>Exploratory Plot</h3>
         <iframe
           src="assets/eda-plot.html"
           width="800"
@@ -95,38 +103,34 @@
 
         <h2>Framing a Prediction Problem</h2>
         <p>
-          My prediction target is the <code>avg_rating</code> of each recipe. I framed this as a <strong>regression</strong> problem since the goal is to predict a continuous score between 0 and 5. Features used include:
+          The prediction target is <code>avg_rating</code>, a continuous value between 0 and 5. I framed this as a <strong>regression</strong> problem using features such as:
         </p>
         <ul>
-          <li>minutes</li>
-          <li>n_steps</li>
-          <li>review_count</li>
-          <li>health_score</li>
+          <li><code>minutes</code></li>
+          <li><code>n_steps</code></li>
+          <li><code>review_count</code></li>
+          <li><code>health_score</code></li>
         </ul>
 
         <h2>Baseline Model</h2>
         <p>
-          I started with a <strong>Linear Regression</strong> model. It achieved:
+          I started with a <strong>Linear Regression</strong> model. Results:
         </p>
         <ul>
-          <li>Mean Squared Error (MSE): <strong>0.58</strong></li>
-          <li>R² Score: <strong>0.12</strong></li>
+          <li>Mean Squared Error (MSE): 0.58</li>
+          <li>R² Score: 0.12</li>
         </ul>
-        <p>
-          While simple, this model didn’t capture complex relationships in the data.
-        </p>
+        <p>This model provided a weak but useful baseline.</p>
 
         <h2>Final Model</h2>
         <p>
-          I trained a <strong>Random Forest Regressor</strong> which improved performance:
+          I used a <strong>Random Forest Regressor</strong> with hyperparameter tuning. Results:
         </p>
         <ul>
-          <li>Mean Squared Error (MSE): <strong>0.45</strong></li>
-          <li>R² Score: <strong>0.35</strong></li>
+          <li>Mean Squared Error (MSE): 0.45</li>
+          <li>R² Score: 0.35</li>
         </ul>
-        <p>
-          This model was better at handling non-linear patterns and interactions between features.
-        </p>
+        <p>It captured non-linear relationships and performed significantly better than the baseline.</p>
 
         <h3>Feature Importance</h3>
         <iframe
@@ -136,7 +140,7 @@
           frameborder="0"
         ></iframe>
 
-        <h3>Residual Plot</h3>
+        <h3>Residuals Plot</h3>
         <iframe
           src="assets/residuals.html"
           width="800"
@@ -144,16 +148,10 @@
           frameborder="0"
         ></iframe>
 
-        <p>For full code and details, visit the <a href="https://github.com/YOUR_USERNAME/YOUR_REPO">GitHub repository</a>.</p>
+        <p>See full code and analysis in the <a href="{{ site.github.repository_url }}">GitHub repository</a>.</p>
       </section>
     </div>
 
-    <!-- FOOTER -->
-    <div id="footer_wrap" class="outer">
-      <footer class="inner">
-        <p>Created by Nadia Sau | nadia@email.com</p>
-        <p>Published with <a href="https://pages.github.com">GitHub Pages</a></p>
-      </footer>
-    </div>
+
   </body>
 </html>
