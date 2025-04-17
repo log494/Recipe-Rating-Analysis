@@ -76,26 +76,62 @@
         </div>
 
         <h2>Data Cleaning and Exploratory Data Analysis</h2>
-        <!-- Your full section copied below -->
-        <p>To explore and prepare the dataset for analysis, I first performed several cleaning and transformation steps to ensure the data was usable and meaningful for evaluating recipe ratings.</p>
-
+      
+        <p>
+            To explore and prepare the dataset for analysis, I first performed several cleaning and transformation steps to ensure the data was usable and meaningful for evaluating recipe ratings.
+        </p>
+       
         <h3>Merging Datasets</h3>
-        <p>I merged the Recipes and Ratings datasets using a left join on recipe ID.</p>
-
+        <p>
+            I began by merging the <code>Recipes</code> and <code>Ratings</code> datasets into a single DataFrame. Since each recipe can have multiple ratings, I performed a left merge using the <code>id</code> column from the <code>Recipes</code> table and the <code>recipe_id</code> column from the <code>Ratings</code> table.
+        </p>
+       
         <h3>Average Rating</h3>
-        <p>Calculated per-recipe average rating, replacing 0 ratings with NaN to avoid skew.</p>
-
+        <p>
+            Because each recipe has multiple user-submitted ratings, I calculated the average rating for each recipe using <code>groupby</code> on <code>recipe_id</code> and taking the mean of the <code>rating</code> values. I then mapped the resulting Series back to the full DataFrame using the <code>id</code> column. Before this, I replaced any rating values of 0 with <code>NaN</code> to avoid skewing the average.
+        </p>
+       
         <h3>Review Count</h3>
-        <p>Used value_counts() on recipe_id to calculate number of reviews for each recipe.</p>
-
+        <p>
+            I was curious whether the number of reviews a recipe received correlated with its average rating. To explore this, I created a <code>review_count</code> column by using <code>value_counts()</code> on the <code>recipe_id</code> column and then mapping those counts back to the full dataset using the <code>id</code> column. I also filled any missing values with 0.
+        </p>
+       
         <h3>Health Score</h3>
-        <p>Weighted health score based on protein, sugar, fat, calories, etc. Outliers clipped between the 1st and 98th percentiles.</p>
-
+        <p>
+            To examine whether a recipe's healthiness impacted its rating, I created a <code>health_score</code> based on the nutritional data provided. I extracted individual nutritional values into separate columns (e.g., sugar, protein, sodium), assumed each recipe serves four people, and adjusted the values accordingly.
+        </p>
+        <p>
+            I then applied a weighting system to reflect the nutritional value of each component:
+        </p>
+        <ul>
+            <li><strong>Positive weight</strong>: Protein (+2)</li>
+            <li><strong>Negative weights</strong>: Sugar (-1.8), saturated fat (-1.5), total fat, carbs, calories (-1 each), and sodium (-0.5)</li>
+        </ul>
+        <p>
+            The resulting <code>health_score</code> was negative for healthier recipes and positive for less healthy ones, so I flipped the sign so that <strong>higher scores indicate unhealthier recipes</strong>.
+        </p>
+        <p>
+            Initially, some scores were unrealistically high (e.g., over 100,000), due to outliers such as a single recipe having a sugar PDV of 30,000. To fix this, I clipped extreme health score values between the 1st and 98th percentile. This reduced the total number of recipes from ~23,000 to ~22,000, the mean score from 62 to 49, and the standard deviation from 147 to 48. The maximum score also dropped from over 16,000 to 329.
+        </p>
+       
         <h3>Recipe Duration (Minutes)</h3>
-        <p>Clipped top/bottom 1% to remove unrealistic cook times (some were months long).</p>
+        <p>
+            Lastly, I addressed outliers in the <code>minutes</code> column, which included some recipes that took months to prepare. I clipped the top and bottom 1% of the <code>minutes</code> distribution to focus on recipes with realistic preparation times.
+        </p>
+        <p>
+          With the data cleaned and key features engineered, I created several visualizations to explore how different factors influence recipe ratings. I found the strongest correlations with health score, number of ingredients, number of reviews, and number of steps        </p>
+        <h3>Exploratory Visualizations</h3>
+<div style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;">
 
-        <h3>EDA Plot</h3>
-        <!-- <iframe src="assets/eda-plot.html" width="800" height="600" frameborder="0"></iframe> -->
+  <iframe src="assets/health-vs-rating.html" width="400" height="300" frameborder="0"></iframe>
+
+  <iframe src="assets/ingNumber-vs-rating.html" width="400" height="300" frameborder="0"></iframe>
+
+  <iframe src="assets/numReviews-vs-rating.html" width="400" height="300" frameborder="0"></iframe>
+
+  <iframe src="assets/steps-vs-rating.html" width="400" height="300" frameborder="0"></iframe>
+
+</div>
 
         <h2>Framing a Prediction Problem</h2>
         <p>
