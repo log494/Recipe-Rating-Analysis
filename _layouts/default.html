@@ -14,7 +14,6 @@
   </head>
 
   <body>
-    <!-- HEADER -->
     <div id="header_wrap" class="outer">
       <header class="inner">
         {% if site.github.is_project_page %}
@@ -22,25 +21,18 @@
             <a id="forkme_banner" href="{{ site.github.repository_url }}">View on GitHub</a>
           </div>
         {% endif %}
-
         <h1 id="project_title">Recipe For a Five-Star Rating</h1>
-        <h2 id="project_tagline">
-          Analysis on Recipe Data and its Trends on Ratings
-        </h2>
+        <h2 id="project_tagline">Can nutrition, steps, and timing predict a 5-star meal?</h2>
+        <p><strong>By Nadia Sau – nadia@email.com</strong></p>
       </header>
     </div>
 
-    <!-- MAIN CONTENT -->
     <div id="main_content_wrap" class="outer">
-      <section
-        id="main_content"
-        class="inner"
-        style="max-width: 1000px; margin: 0 auto"
-      >
+      <section id="main_content" class="inner" style="max-width: 1000px; margin: 0 auto">
+        
         <h2>Introduction</h2>
         <p>
-          Welcome to a report on the investigation into a dataset on Recipes and Ratings.
-          Using data from food.com, I set out to predict what types of recipes tend to have higher average ratings using data visualization and regression techniques.
+          This project investigates what makes a recipe highly rated on Food.com. By analyzing thousands of user-submitted recipes and their ratings, the goal is to predict a recipe's average rating based on metadata like preparation time, number of steps, and nutrition. I used exploratory data analysis, feature engineering, and machine learning to build a model that predicts recipe ratings.
         </p>
 
         <!-- Dataset Tables -->
@@ -54,14 +46,14 @@
               <tbody>
                 <tr><td>name</td><td>Recipe name</td></tr>
                 <tr><td>id</td><td>Recipe ID</td></tr>
-                <tr><td>minutes</td><td>Minutes to prepare recipe</td></tr>
-                <tr><td>contributor_id</td><td>User ID who submitted this recipe</td></tr>
-                <tr><td>submitted</td><td>Date recipe was submitted</td></tr>
-                <tr><td>tags</td><td>Food.com tags for recipe</td></tr>
-                <tr><td>nutrition</td><td>Nutrition info: [calories, fat, sugar, sodium, protein, sat. fat, carbs]</td></tr>
+                <tr><td>minutes</td><td>Preparation time</td></tr>
+                <tr><td>contributor_id</td><td>User who submitted it</td></tr>
+                <tr><td>submitted</td><td>Date submitted</td></tr>
+                <tr><td>tags</td><td>Associated tags</td></tr>
+                <tr><td>nutrition</td><td>List: [calories, fat, sugar, sodium, protein, sat. fat, carbs]</td></tr>
                 <tr><td>n_steps</td><td>Number of steps</td></tr>
-                <tr><td>steps</td><td>Step-by-step instructions</td></tr>
-                <tr><td>description</td><td>User-provided recipe description</td></tr>
+                <tr><td>steps</td><td>Step-by-step text</td></tr>
+                <tr><td>description</td><td>Recipe description</td></tr>
               </tbody>
             </table>
           </div>
@@ -74,81 +66,75 @@
               </thead>
               <tbody>
                 <tr><td>user_id</td><td>User ID</td></tr>
-                <tr><td>recipe_id</td><td>Recipe ID</td></tr>
-                <tr><td>date</td><td>Date of rating</td></tr>
-                <tr><td>rating</td><td>Rating given</td></tr>
-                <tr><td>review</td><td>User review text</td></tr>
+                <tr><td>recipe_id</td><td>Linked recipe ID</td></tr>
+                <tr><td>date</td><td>Rating date</td></tr>
+                <tr><td>rating</td><td>1–5 rating</td></tr>
+                <tr><td>review</td><td>Optional review text</td></tr>
               </tbody>
             </table>
           </div>
         </div>
 
         <h2>Data Cleaning and Exploratory Data Analysis</h2>
-        <p>I merged the Recipes and Ratings datasets and performed data cleaning and feature engineering steps to prepare for modeling.</p>
+        <!-- Your full section copied below -->
+        <p>To explore and prepare the dataset for analysis, I first performed several cleaning and transformation steps to ensure the data was usable and meaningful for evaluating recipe ratings.</p>
 
-        <ul>
-          <li>Removed ratings of 0 and computed average rating per recipe.</li>
-          <li>Created a <code>review_count</code> feature using <code>value_counts</code>.</li>
-          <li>Engineered a <strong>health_score</strong> using weighted nutrition values and clipped extreme outliers.</li>
-          <li>Trimmed top and bottom 1% values from <code>minutes</code> to remove unrealistic durations.</li>
-        </ul>
+        <h3>Merging Datasets</h3>
+        <p>I merged the Recipes and Ratings datasets using a left join on recipe ID.</p>
 
-        <h3>Exploratory Plot</h3>
-        <iframe
-          src="assets/eda-plot.html"
-          width="800"
-          height="600"
-          frameborder="0"
-        ></iframe>
+        <h3>Average Rating</h3>
+        <p>Calculated per-recipe average rating, replacing 0 ratings with NaN to avoid skew.</p>
+
+        <h3>Review Count</h3>
+        <p>Used value_counts() on recipe_id to calculate number of reviews for each recipe.</p>
+
+        <h3>Health Score</h3>
+        <p>Weighted health score based on protein, sugar, fat, calories, etc. Outliers clipped between the 1st and 98th percentiles.</p>
+
+        <h3>Recipe Duration (Minutes)</h3>
+        <p>Clipped top/bottom 1% to remove unrealistic cook times (some were months long).</p>
+
+        <h3>EDA Plot</h3>
+        <!-- <iframe src="assets/eda-plot.html" width="800" height="600" frameborder="0"></iframe> -->
 
         <h2>Framing a Prediction Problem</h2>
         <p>
-          The prediction target is <code>avg_rating</code>, a continuous value between 0 and 5. I framed this as a <strong>regression</strong> problem using features such as:
+          The prediction target is <code>avg_rating</code>, a continuous value from 1 to 5. This is a <strong>regression</strong> problem. Features include:
         </p>
         <ul>
-          <li><code>minutes</code></li>
-          <li><code>n_steps</code></li>
-          <li><code>review_count</code></li>
-          <li><code>health_score</code></li>
+          <li>Preparation time (<code>minutes</code>)</li>
+          <li>Number of steps (<code>n_steps</code>)</li>
+          <li>Review count (<code>review_count</code>)</li>
+          <li>Health score (<code>health_score</code>)</li>
         </ul>
 
         <h2>Baseline Model</h2>
         <p>
-          I started with a <strong>Linear Regression</strong> model. Results:
+          I first used a <strong>Linear Regression</strong> model with the features above. It served as a baseline with:
         </p>
         <ul>
-          <li>Mean Squared Error (MSE): 0.58</li>
-          <li>R² Score: 0.12</li>
+          <li>Mean Squared Error (MSE): <strong>0.58</strong></li>
+          <li>R² score: <strong>0.12</strong></li>
         </ul>
-        <p>This model provided a weak but useful baseline.</p>
+        <p>This indicated a weak linear fit — more complex models were needed.</p>
 
         <h2>Final Model</h2>
         <p>
-          I used a <strong>Random Forest Regressor</strong> with hyperparameter tuning. Results:
+          I used a <strong>Random Forest Regressor</strong> with 100 trees, which better captured non-linear relationships.
         </p>
         <ul>
-          <li>Mean Squared Error (MSE): 0.45</li>
-          <li>R² Score: 0.35</li>
+          <li>Mean Squared Error (MSE): <strong>0.45</strong></li>
+          <li>R² score: <strong>0.35</strong></li>
         </ul>
-        <p>It captured non-linear relationships and performed significantly better than the baseline.</p>
+        <p>Key features included health score, review count, and number of steps.</p>
 
         <h3>Feature Importance</h3>
-        <iframe
-          src="assets/feature-importance.html"
-          width="800"
-          height="600"
-          frameborder="0"
-        ></iframe>
+        <!-- <iframe src="assets/feature-importance.html" width="800" height="600" frameborder="0"></iframe> -->
 
         <h3>Residuals Plot</h3>
-        <iframe
-          src="assets/residuals.html"
-          width="800"
-          height="600"
-          frameborder="0"
-        ></iframe>
+        <!-- <iframe src="assets/residuals.html" width="800" height="600" frameborder="0"></iframe> -->
 
-        <p>See full code and analysis in the <a href="{{ site.github.repository_url }}">GitHub repository</a>.</p>
+        <p>See full code and analysis on <a href="{{ site.github.repository_url }}">GitHub</a>.</p>
       </section>
     </div>
 
