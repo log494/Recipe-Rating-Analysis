@@ -121,15 +121,11 @@
         <p>
           With the data cleaned and key features engineered, I created several visualizations to explore how different factors influence recipe ratings. I found the strongest correlations with health score, number of ingredients, number of reviews, and number of steps        </p>
           <h3>Exploratory Visualizations</h3>
-          <div style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;">
-            <iframe src="assets/health-vs-rating.html" width="800" height="600" frameborder="0"></iframe>
-          
-            <iframe src="assets/ingNumber-vs-rating.html" width="800" height="600" frameborder="0"></iframe>
-          
-            <iframe src="assets/numReviews-vs-rating.html" width="800" height="600" frameborder="0"></iframe>
-          
-            <iframe src="assets/steps-vs-rating.html" width="800" height="600" frameborder="0"></iframe>
-          
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 30px; justify-items: center;">
+            <iframe src="assets/health-vs-rating.html" width="100%" height="400" style="max-width: 600px;" frameborder="0"></iframe>
+            <iframe src="assets/ingNumber-vs-rating.html" width="100%" height="400" style="max-width: 600px;" frameborder="0"></iframe>
+            <iframe src="assets/numReviews-vs-rating.html" width="100%" height="400" style="max-width: 600px;" frameborder="0"></iframe>
+            <iframe src="assets/steps-vs-rating.html" width="100%" height="400" style="max-width: 600px;" frameborder="0"></iframe>
           </div>
 
         <h2>Framing a Prediction Problem</h2>
