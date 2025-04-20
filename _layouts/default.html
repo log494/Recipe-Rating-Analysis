@@ -122,20 +122,25 @@
           With the data cleaned and key features engineered, I created several visualizations to explore how different factors influence recipe ratings. I found the strongest correlations with health score, number of ingredients, number of reviews, and number of steps        </p>
           <h3>Exploratory Visualizations</h3>
           <div style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;">
+            <iframe src="assets/health-vs-rating.html" width="800" height="600" frameborder="0"></iframe>
           
-            <iframe src="assets/health-vs-rating.html" style="width: 100%; max-width: 400px; height: 300px;" frameborder="0"></iframe>
+            <iframe src="assets/ingNumber-vs-rating.html" width="800" height="600" frameborder="0"></iframe>
           
-            <iframe src="assets/ingNumber-vs-rating.html" style="width: 100%; max-width: 400px; height: 300px;" frameborder="0"></iframe>
+            <iframe src="assets/numReviews-vs-rating.html" width="800" height="600" frameborder="0"></iframe>
           
-            <iframe src="assets/numReviews-vs-rating.html" style="width: 100%; max-width: 400px; height: 300px;" frameborder="0"></iframe>
-          
-            <iframe src="assets/steps-vs-rating.html" style="width: 100%; max-width: 400px; height: 300px;" frameborder="0"></iframe>
+            <iframe src="assets/steps-vs-rating.html" width="800" height="600" frameborder="0"></iframe>
           
           </div>
 
         <h2>Framing a Prediction Problem</h2>
         <p>
-          The prediction target is <code>avg_rating</code>, a continuous value from 1 to 5. This is a <strong>regression</strong> problem. Features include:
+          <strong>Prediction Problem:</strong> Can we predict the average rating of a recipe based on its preparation time, number of steps, review count, and health score?
+        </p>
+        <p>
+          <strong>Type of Prediction:</strong> Regression (predicting a continuous value from 1 to 5)
+        </p>
+        <p>
+          <strong>Features Used:</strong>
         </p>
         <ul>
           <li>Preparation time (<code>minutes</code>)</li>
@@ -149,26 +154,55 @@
           I first used a <strong>Linear Regression</strong> model with the features above. It served as a baseline with:
         </p>
         <ul>
-          <li>Mean Squared Error (MSE): <strong>0.58</strong></li>
-          <li>R² score: <strong>0.12</strong></li>
+          <li>Mean Squared Error (MSE): <strong>0.247</strong></li>
+          <li>R² score: <strong>0.005</strong></li>
         </ul>
         <p>This indicated a weak linear fit — more complex models were needed.</p>
 
         <h2>Final Model</h2>
+
+        <h3>Feature Engineering</h3>
         <p>
-          I used a <strong>Random Forest Regressor</strong> with 100 trees, which better captured non-linear relationships.
+        To enhance predictive performance, I engineered two new features:
         </p>
         <ul>
-          <li>Mean Squared Error (MSE): <strong>0.45</strong></li>
-          <li>R² score: <strong>0.35</strong></li>
+          <li><strong>Sugar per Ingredient</strong> – captures the average sweetness per component of a recipe</li>
+          <li><strong>Log of Minutes</strong> – reduces skew in the preparation time feature</li>
         </ul>
-        <p>Key features included health score, review count, and number of steps.</p>
-
-        <h3>Feature Importance</h3>
-        <!-- <iframe src="assets/feature-importance.html" width="800" height="600" frameborder="0"></iframe> -->
-
-        <h3>Residuals Plot</h3>
-        <!-- <iframe src="assets/residuals.html" width="800" height="600" frameborder="0"></iframe> -->
+        <p>
+        These transformations were included in a <code>ColumnTransformer</code> alongside scaling for core numeric features like <code>n_ingredients</code>, <code>minutes</code>, <code>sugar</code>, and <code>review_count</code>.
+        </p>
+        
+        <h3>Model Selection</h3>
+        <p>
+        I used a <strong>Random Forest Regressor</strong> for its ability to capture non-linear relationships. Hyperparameters were optimized using <code>GridSearchCV</code>:
+        </p>
+        <ul>
+          <li><strong>n_estimators:</strong> 100 (number of trees)</li>
+          <li><strong>max_depth:</strong> 10 (limits tree depth to avoid overfitting)</li>
+        </ul>
+        
+        <h3>Performance Comparison</h3>
+        <p>
+        <b>Baseline Model:</b> Linear Regression using original numeric features.
+        </p>
+        <ul>
+          <li>MSE: 0.249</li>
+          <li>R² Score: 0.056</li>
+        </ul>
+        
+        <p>
+        <b>Final Model:</b> Random Forest with engineered features and optimized hyperparameters.
+        </p>
+        <ul>
+          <li>MSE: 0.2352</li>
+          <li>R² Score: 0.356</li>
+        </ul>
+        
+        <h3>Improvement</h3>
+        <p>
+        The final model showed a clear improvement in both <strong>mean squared error</strong> and <strong>R² score</strong>, indicating better fit and predictive performance. The added features like <code>sugar_per_ingredient</code> and <code>log_minutes</code> helped the model capture more nuanced relationships, while the Random Forest's flexibility allowed it to model complex, non-linear patterns in the data.
+        </p>
 
         <p>See full code and analysis on <a href="{{ site.github.repository_url }}">GitHub</a>.</p>
       </section>
