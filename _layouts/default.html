@@ -120,6 +120,20 @@
         </p>
         <p>
           With the data cleaned and key features engineered, I created several visualizations to explore how different factors influence recipe ratings. I found the strongest correlations with health score, number of ingredients, number of reviews, and number of steps        </p>
+         
+          <h3>Exploratory Visualizations</h3>
+          <div style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;">
+            <iframe src="assets/health-vs-rating.html" width="800" height="600" frameborder="0"></iframe>
+          
+            <iframe src="assets/ingNumber-vs-rating.html" width="800" height="600" frameborder="0"></iframe>
+          
+            <iframe src="assets/numReviews-vs-rating.html" width="800" height="600" frameborder="0"></iframe>
+          
+            <iframe src="assets/steps-vs-rating.html" width="800" height="600" frameborder="0"></iframe>
+          
+          </div>
+         
+          <!-- 
           <h3>Exploratory Visualizations</h3>
           <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 30px; justify-items: center;">
             <iframe src="assets/health-vs-rating.html" width="100%" height="400" style="max-width: 600px;" frameborder="0"></iframe>
@@ -127,7 +141,7 @@
             <iframe src="assets/numReviews-vs-rating.html" width="100%" height="400" style="max-width: 600px;" frameborder="0"></iframe>
             <iframe src="assets/steps-vs-rating.html" width="100%" height="400" style="max-width: 600px;" frameborder="0"></iframe>
           </div>
-
+          -->
         <h2>Framing a Prediction Problem</h2>
         <p>
           <strong>Prediction Problem:</strong> Can we predict the average rating of a recipe based on its preparation time, number of steps, review count, and health score?
@@ -147,63 +161,62 @@
 
         <h2>Baseline Model</h2>
         <p>
-          I first used a <strong>Linear Regression</strong> model with the features above. It served as a baseline with:
+          I first used a <strong>Linear Regression</strong> model as a baseline, using the original numeric features without any transformation. These included:
+        </p>
+        <ul>
+          <li>Number of ingredients (<code>n_ingredients</code>)</li>
+          <li>Preparation time (<code>minutes</code>)</li>
+          <li>Health score (<code>health_score</code>)</li>
+          <li>Review count (<code>review_count</code>)</li>
+        </ul>
+        <p>
+          The baseline model showed:
         </p>
         <ul>
           <li>Mean Squared Error (MSE): <strong>0.247</strong></li>
-          <li>R² score: <strong>0.005</strong></li>
+          <li>R² Score: <strong>0.0049</strong></li>
         </ul>
         <p>This indicated a weak linear fit — more complex models were needed.</p>
-
+        
         <h2>Final Model</h2>
 
         <h3>Feature Engineering</h3>
         <p>
-        To enhance predictive performance, I engineered two new features:
-        </p>
-        <ul>
-          <li><strong>Sugar per Ingredient</strong> – captures the average sweetness per component of a recipe</li>
-          <li><strong>Log of Minutes</strong> – reduces skew in the preparation time feature</li>
-        </ul>
-        <p>
-        These transformations were included in a <code>ColumnTransformer</code> alongside scaling for core numeric features like <code>n_ingredients</code>, <code>minutes</code>, <code>sugar</code>, and <code>review_count</code>.
+          To improve predictive performance, I applied a <strong>log transformation</strong> to the <code>minutes</code> feature to reduce skew. This transformation, along with standard scaling for all numeric inputs, was implemented using a <code>ColumnTransformer</code>.
         </p>
         
         <h3>Model Selection</h3>
         <p>
-        I used a <strong>Random Forest Regressor</strong> for its ability to capture non-linear relationships. Hyperparameters were optimized using <code>GridSearchCV</code>:
+          I used a <strong>Random Forest Regressor</strong> to better capture non-linear relationships between recipe attributes and ratings. Hyperparameters were tuned using <code>GridSearchCV</code>:
         </p>
         <ul>
           <li><strong>n_estimators:</strong> 100 (number of trees)</li>
-          <li><strong>max_depth:</strong> 10 (limits tree depth to avoid overfitting)</li>
+          <li><strong>max_depth:</strong> 10 (limits tree depth to reduce overfitting)</li>
         </ul>
         
         <h3>Performance Comparison</h3>
         <p>
-        <b>Baseline Model:</b> Linear Regression using original numeric features.
+          <b>Baseline Model:</b> Linear Regression using original numeric features
         </p>
         <ul>
-          <li>MSE: 0.249</li>
-          <li>R² Score: 0.056</li>
+          <li>MSE: <strong>0.2478</strong></li>
+          <li>R² Score: <strong>0.005</strong></li>
         </ul>
         
         <p>
-        <b>Final Model:</b> Random Forest with engineered features and optimized hyperparameters.
+          <b>Final Model:</b> Random Forest with scaled inputs and log-transformed <code>minutes</code>
         </p>
         <ul>
-          <li>MSE: 0.2352</li>
-          <li>R² Score: 0.356</li>
+          <li>MSE: <strong>0.2350</strong></li>
+          <li>R² Score: <strong>0.056</strong></li>
         </ul>
         
         <h3>Improvement</h3>
         <p>
-        The final model showed a clear improvement in both <strong>mean squared error</strong> and <strong>R² score</strong>, indicating better fit and predictive performance. The added features like <code>sugar_per_ingredient</code> and <code>log_minutes</code> helped the model capture more nuanced relationships, while the Random Forest's flexibility allowed it to model complex, non-linear patterns in the data.
+          The final model showed a modest but consistent improvement in both <strong>Mean Squared Error</strong> and <strong>R² Score</strong>, suggesting that modeling non-linear relationships and addressing feature skew helped improve predictive performance.
         </p>
-
+        
         <p>See full code and analysis on <a href="{{ site.github.repository_url }}">GitHub</a>.</p>
-      </section>
-    </div>
-
 
   </body>
 </html>
