@@ -137,14 +137,6 @@
           <strong>Type of Prediction:</strong> Regression (predicting a continuous value from 1 to 5)
         </p>
         <p>
-          <strong>Features Used:</strong>
-        </p>
-        <ul>
-          <li>Number of ingredients (<code>n_ingredients</code>)</li>
-          <li>Number of steps (<code>n_steps</code>)</li>
-          <li>Review count (<code>review_count</code>)</li>
-          <li>Health score (<code>health_score</code>)</li>
-        </ul>
 
         <h2>Baseline Model</h2>
         <p>
@@ -166,48 +158,40 @@
         <p>This indicated a weak linear fit — more complex models were needed.</p>
 
         <h2>Final Model</h2>
+
         <h3>Feature Engineering</h3>
         <p>
-          In the final model, I used only standardized numeric features, removing any additional transformations. The features included:
+          In the final model, I standardized all numeric features using <code>StandardScaler</code> within a <code>ColumnTransformer</code> to ensure each feature contributed equally to the model's predictions.
         </p>
-        <ul>
-          <li>Number of ingredients (<code>n_ingredients</code>)</li>
-          <li>Number of steps (<code>n_steps</code>)</li>
-          <li>Health score (<code>health_score</code>)</li>
-          <li>Review count (<code>review_count</code>)</li>
-        </ul>
-        <p>
-          All numeric features were scaled using <code>StandardScaler</code> in a <code>ColumnTransformer</code> to ensure the model treated them equally.
-        </p>
-
+        
         <h3>Model Selection</h3>
         <p>
-          I chose a <strong>Random Forest Regressor</strong> for its ability to capture complex, non-linear relationships between features and the target variable. To fine-tune the model, I used <code>GridSearchCV</code> with the following parameters:
+          I used a <strong>Random Forest Regressor</strong> to capture complex, non-linear relationships in the data. I tuned the model using <code>GridSearchCV</code> across the following hyperparameters:
         </p>
         <ul>
-          <li><strong>n_estimators:</strong> [50, 100] — number of trees in the forest</li>
-          <li><strong>max_depth:</strong> [5, 10] — maximum depth of each tree</li>
+          <li><strong>n_estimators:</strong> [300, 400] — number of trees in the forest</li>
+          <li><strong>max_depth:</strong> [30, 40] — maximum depth of each tree</li>
         </ul>
         <p>
-          The best-performing model used 100 trees and a maximum depth of 10.
+          The best-performing model used <strong>400 estimators</strong> and a <strong>maximum depth of 40</strong>. Since the optimal parameters were at the upper limit of the tested range, additional tuning might yield marginal improvements. However, performance gains appeared to taper off beyond a depth of 30, indicating the model was approaching its optimal complexity.
         </p>
-
+        
         <h3>Performance Comparison</h3>
         <p><strong>Baseline Model:</strong> Linear Regression with original numeric features</p>
         <ul>
-          <li>MSE: <strong>0.2484</strong></li>
+          <li>MSE: <strong>0.248</strong></li>
           <li>R² Score: <strong>0.003</strong></li>
         </ul>
-
-        <p><strong>Final Model:</strong> Random Forest with scaled numeric inputs</p>
+        
+        <p><strong>Final Model:</strong> Random Forest with scaled numeric features</p>
         <ul>
-          <li>MSE: <strong>0.2337</strong></li>
-          <li>R² Score: <strong>0.062</strong></li>
+          <li>MSE: <strong>0.136</strong></li>
+          <li>R² Score: <strong>0.453</strong></li>
         </ul>
-
+        
         <h3>Improvement</h3>
         <p>
-          The final model showed a modest but consistent improvement over the baseline, reducing error and better capturing variability in user ratings. The Random Forest model’s ability to model non-linear relationships made it better suited for this prediction task than a simple linear approach.
+          The final model showed a substantial improvement in both <strong>mean squared error</strong> and <strong>R² score</strong>, capturing significantly more variance in recipe ratings than the baseline. The Random Forest’s flexibility, combined with feature scaling and thorough hyperparameter tuning, led to a much more accurate prediction model.
         </p>
 
         <p>See full code and analysis on <a href="{{ site.github.repository_url }}">GitHub</a>.</p>
