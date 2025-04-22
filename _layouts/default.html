@@ -23,7 +23,7 @@
         {% endif %}
         <h1 id="project_title">Recipe For a Five-Star Rating</h1>
         <h2 id="project_tagline">Can nutrition, steps, and timing predict a 5-star meal?</h2>
-        <p><strong>By Nadia Sau – nadia@email.com</strong></p>
+        <p>By Logan McKeown</p>
       </header>
     </div>
 
@@ -140,7 +140,7 @@
 
         <h2>Baseline Model</h2>
         <p>
-          I first used a <strong>Linear Regression</strong> model as a baseline. These included:
+          I first used a <strong>Linear Regression</strong> model as a baseline. To predict average rating, I used these variables:
         </p>
         <ul>
           <li>Number of ingredients (<code>n_ingredients</code>)</li>
@@ -155,7 +155,7 @@
           <li>Mean Squared Error (MSE): <strong>0.2484</strong></li>
           <li>R² Score: <strong>0.003</strong></li>
         </ul>
-        <p>This indicated a weak linear fit — more complex models were needed.</p>
+        <p>With a high mean squared error and an R² score close to zero, the model failed to explain much of the variance in recipe ratings—suggesting that a simple linear model was not sufficient for capturing the complexity of the data.</p>
 
         <h2>Final Model</h2>
 
