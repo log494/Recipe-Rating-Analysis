@@ -92,7 +92,7 @@
 
         <h3>Review Count</h3>
         <p>
-          I was curious whether the number of reviews a recipe received correlated with its average rating. To explore this, I created a <code>review_count</code> column by using <code>value_counts()</code> on the <code>recipe_id</code> column and then mapping those counts back to the full dataset using the <code>id</code> column. I also filled any missing values with 0.
+          I was curious whether the number of reviews a recipe received correlated with its average rating. To explore this, I created a <code>review_count</code> column by using <code>value_counts()</code> on the <code>recipe_id</code> column and then mapping those counts back to the full dataset using the <code>id</code> column. For recipes with no reviews I set the count to 0.
         </p>
 
         <h3>Health Score</h3>
